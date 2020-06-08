@@ -1,6 +1,7 @@
 var app = new Vue({
   el: '#app',
   data: {
+    brand: 'Helloooo',
     product: 'Socks',
     image: './assets/vmSocks-green.jpg',
     link: "https://www.chunchunye.com",
@@ -34,6 +35,18 @@ var app = new Vue({
     },
     updateProduct(image) {
       this.image = image
+    }
+  },
+  computed: {
+    title() {
+      return this.brand + ' ' + this.product
+    },
+    sale() {
+      let title = this.brand + ' ' + this.product
+      if (this.onSale) {
+        return title + ' is on Sale'
+      }
+      return title + ' is not on Sale'
     }
   }
 })

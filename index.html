@@ -17,11 +17,11 @@
         </div>
 
         <div class="product-info">
-          <h1>{{ product }}</h1>
+          <h1>{{ title }}</h1>
           <a :href="link" target="_blank">More products like this</a>
+          <p>{{ sale }}</p>
           <p>Size:</p>
           <span v-for="size in sizes">{{ size }}</span>
-          <p v-if="onSale">On Sale!</p>
           <p v-if="inStock">In stock</p>
           <p v-else :class="{ outOfStock: !inStock}">Out of stock</p>
           <div>
