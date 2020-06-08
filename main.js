@@ -1,4 +1,5 @@
-//Create a new component for product-details with a prop of details. 
+Vue.config.devtools = true
+
 
 Vue.component('product-details', {
   props: {
@@ -53,10 +54,9 @@ Vue.component('product', {
           Add to cart
           </button>
 
-          <div class="cart">
-            <p>Cart({{ cart }})</p>
-          </div>
-
+          <button v-on:click="removeFromCart">
+          Add to cart
+          </button>
        </div>  
     
     </div>
@@ -80,13 +80,15 @@ Vue.component('product', {
             variantImage: 'https://www.vuemastery.com/images/challenges/vmSocks-blue-onWhite.jpg',
             variantQuantity: 0     
           }
-        ],
-        cart: 0
+        ]
     }
   },
     methods: {
       addToCart() {
-          this.cart += 1
+        this.$emit('add-to-cart', this.variants[this.selectedVariant].variantId)
+      },
+      removeFromCart() {
+        this.$emit('remove-from-cart', this.variants[this.selectedVariant].variantId)
       },
       updateProduct(index) {  
           this.selectedVariant = index
@@ -114,6 +116,16 @@ Vue.component('product', {
 var app = new Vue({
     el: '#app',
     data: {
-      premium: true
+      premium: true,
+      cart: []
+    },
+    methods: {
+      addToCart(id) {
+        this.cart.push(id)
+      },
+      removeFromCart(id) {
+        let index = this.cart.indexOf(id)
+        this.cart.splice(index, 1)
+      }
     }
 })
