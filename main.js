@@ -6,6 +6,12 @@ Vue.component('product-review', {
   },
   template: `
     <form class="review-form" @submit.prevent="onSubmit">
+      <p v-if="errors.length">
+        <b>Please correct the following errors:</b>
+        <ul>
+          <li v-for="error in errors">{{ error }}</li>
+        </ul>
+      </P>
       <p>
         <label for="name">Name:</label>
         <input id="name" v-model="name" placeholder="name">
@@ -24,6 +30,17 @@ Vue.component('product-review', {
           <option>1</option>
         </select>
       </p>
+      <div>
+        <p>Would you recommand this product?</p>
+        <label>
+          Yes
+          <input type="radio" :value="true" v-model="willRecommand">  
+        </label>
+        <label>
+          No
+          <input type="radio" :value="false" v-model="willRecommand">
+        </label>
+      </div>
       <p>
         <input type="submit" value="Submit">
       </p>
@@ -33,20 +50,32 @@ Vue.component('product-review', {
     return {
       name: null,
       review: null,
-      rating: null
+      rating: null,
+      willRecommand: null,
+      errors: []
     }
   },
   methods: {
     onSubmit() {
-      let productReview = {
-        name: this.name,
-        review: this.review,
-        rating: this.rating
+      if (this.name && this.review && this.rating && this.willRecommand) {
+        let productReview = {
+          name: this.name,
+          review: this.review,
+          rating: Number(this.rating),
+          willRecommand: this.willRecommand
+        }
+        this.$emit('review-submitted', productReview)
+        this.name = null
+        this.review = null
+        this.rating = null
+        this.willRecommand = null
+        this.errors = []
+      } else {
+        if (!this.name) this.errors.push("Name required")
+        if (!this.review) this.errors.push("Review required")
+        if (!this.rating) this.errors.push("Rating required")
+        if (!this.willRecommand) this.errors.push("Recommendation required")
       }
-      this.$emit('review-submitted', productReview)
-      this.name = null
-      this.review = null
-      this.rating = null
     }
   }
 })
@@ -109,6 +138,18 @@ Vue.component('product', {
           </button>
        </div>  
     
+      <div>
+        <h2>Reviews</h2>
+        <p v-if="!reviews.length">No reviews yet.</p>
+        <ul>
+          <li v-for="review in reviews">
+            <p>{{ review.name }}</P>
+            <p>Rating: {{ review.rating }}</P>
+            <p>{{ review.review }}</P>
+            <p>Will recommand: {{ review.willRecommand ? "Yes" : "No" }}</p>
+          </li>
+        </ul>
+      </div>
       <product-review @review-submitted="addReview"></product-review>
     </div>
    `,
@@ -132,7 +173,7 @@ Vue.component('product', {
           variantQuantity: 0
         }
       ],
-      review: []
+      reviews: []
     }
   },
   methods: {
@@ -146,7 +187,7 @@ Vue.component('product', {
         this.selectedVariant = index
     },
     addReview(productReview) {
-      this.review.push(productReview)
+      this.reviews.push(productReview)
     }
   },
   computed: {
