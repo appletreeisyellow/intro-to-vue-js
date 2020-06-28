@@ -1,3 +1,3 @@
-# vue-playground
+# intro-to-vue
 
-I code alone the tutorial from "[Intro to Vue.js](https://www.vuemastery.com/courses/intro-to-vue-js/vue-instance/)"
+Code-along tutorial "[Intro to Vue.js](https://www.vuemastery.com/courses/intro-to-vue-js/vue-instance/)"
